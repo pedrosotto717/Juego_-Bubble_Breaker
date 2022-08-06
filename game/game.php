@@ -18,6 +18,11 @@ if (!isset($_COOKIE['matriz'])) {
   $matrizGameInit = getFromCokiees();
 }
 
+if (isset($_COOKIE['score'])) {
+  $score = $_COOKIE['score'];
+} else {
+  $score = 0;
+}
 
 if (isset($_GET['x']) && isset($_GET['y'])) {
   $matrizGame = getFromCokiees();
@@ -28,6 +33,16 @@ if (isset($_GET['x']) && isset($_GET['y'])) {
 
 
   if (isBubble($matrizGame, $x, $y)) {
+
+    if (isset($_COOKIE['movements'])) {
+      $movements = $_COOKIE['movements'];
+      $movements++;
+      setcookie('movements', $movements, time() + (86400 * 30), "/");
+    } else {
+      $movements = 1;
+      setcookie('movements', $movements, time() + (86400 * 30), "/");
+    }
+
     $pos = 0;
     $positions[] = [
       'x' => $x, // 3
@@ -39,21 +54,55 @@ if (isset($_GET['x']) && isset($_GET['y'])) {
       'y' => $y // 0
     ];
 
-    while ($pos < count($positions) && $pos < 50) {
+    while ($pos < count($positions)) {
       $position = $positions[$pos];
 
-      if (isBubble($matrizGame, $position['x'], $position['y'])) {
+      if (isBubble($matrizGame, $position['x'], $position['y']))
         $positions = array_merge($positions, getBubble($matrizGame, $visited, $position['x'], $position['y']));
-      }
 
       $pos++;
+    }
+
+    $cantidadPelotasSet = count($positions);
+    $scoreSet = $cantidadPelotasSet * ($cantidadPelotasSet - 1);
+
+    if (isset($_COOKIE['score'])) {
+      $score = $_COOKIE['score'];
+      $score += $scoreSet;
+    } else {
+      $score = $scoreSet;
     }
 
     for ($i = 0; $i < count($positions); $i++) {
       $matrizGame[$positions[$i]['x']][$positions[$i]['y']] = 0;
     }
 
+    //correr fichas
+    while (faltaCorrer($matrizGame)) {
+      for ($j = 0; $j < count($matrizGame); $j++) {
+        correrFicha($matrizGame, $j);
+      }
+    }
+
     saveInCokiees($matrizGame);
+    setcookie('score', $score, time() + (86400 * 30), "/");
+    setcookie('pelotas', $cantidadPelotas, time() + (86400 * 30), "/");
+  }
+
+
+  if ($score > 100) {
+    $c = 0;
+    for ($j = 0; $j < count($matrizGame[0] ?? []); $j++) {
+      for ($i = 0; $i < count($matrizGame ?? []); $i++) {
+        if (isBubble($matrizGame, $i, $j))
+          $c++;
+      }
+    }
+
+
+    if ($c == 0) {
+      $gameOver = true;
+    }
   }
 }
 
@@ -76,18 +125,31 @@ if (isset($_GET['x']) && isset($_GET['y'])) {
 
 <body>
   <div class="container">
-    <h1>Bubble Breaker </h1>
-    <a href="/game/reset.php">Reiniciar</a>
+    <nav class="menu">
+      <h1>Bubble Breaker </h1>
+      <ul class="menu-list">
+        <a href="/game/reset.php">Reiniciar</a>
+        <a href="/">Salir</a>
+      </ul>
+    </nav>
+
+    <div class="score-container">
+      <section class="scores">
+        <p>Puntaje: <?= $score ?? $_COOKIE['score'] ?></p>
+        <p>Intentos: <?= $movements ?? $_COOKIE['movements'] ?></p>
+        <?= $gameOver ? "<p class='game-over'> GAME OVER </p>" : ""   ?>
+      </section>
+    </div>
 
     <div class="board-container">
       <section class="board">
         <?php
         $matriz = $matrizGame ?? getFromCokiees();
         ?>
+
         <?php for ($i = 0; $i < count($matriz); $i++) : ?>
           <?php for ($j = 0; $j < count($matriz[$i]); $j++) : ?>
             <div class="cell" data-color="<?php echo $matriz[$i][$j]; ?>" data-pos-x="<?= $i ?>" data-pos-y="<?= $j ?>">
-              <?php echo "$i,$j" ?>
             </div>
           <?php endfor; ?>
         <?php endfor; ?>

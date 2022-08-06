@@ -136,3 +136,57 @@ function getBubble(&$matriz, &$visited, $x, $y)
     echo "</pre>";
   }
 }
+
+
+function correrFicha(&$matriz, $y)
+{
+  for ($i = count($matriz[$y]); $i >= 0; $i--) {
+    if (isset($matriz[$i][$y])) {
+      if ($matriz[$i][$y] == 0 && isset($matriz[$i - 1][$y])) {
+        if ($matriz[$i - 1][$y] != 0) {
+          $matriz[$i][$y] = $matriz[$i - 1][$y];
+          $matriz[$i - 1][$y] = 0;
+        }
+      }
+    }
+    // var_dump($matriz[$i][$y]);
+  }
+}
+
+
+function faltaCorrer($matriz)
+{
+  try {
+    $acumulador = 0;
+    $posX = -1;
+    $falta = false;
+
+    for ($j = count($matriz[0]); $j >= 0; $j--) {
+      for ($i = count($matriz[0]); $i >= 0; $i--) {
+        if (isset($matriz[$i][$j])) {
+          if ($matriz[$i][$j] == 0) {
+            if ($posX == -1) {
+              $posX = $i;
+            }
+            $acumulador += 1;
+          }
+        }
+      }
+
+      if (($acumulador - $posX != 1)
+        && ($acumulador > 0)
+        && ($posX != -1)
+        && ($posX != 0)
+      ) {
+        $falta = true;
+      }
+      $posX = -1;
+      $acumulador = 0;
+    }
+
+    return $falta;
+  } catch (\Throwable $th) {
+    // var_dump($th);
+    return false;
+  }
+}
