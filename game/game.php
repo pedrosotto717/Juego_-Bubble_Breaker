@@ -9,7 +9,8 @@ define('NARANJA', 60);
 
 require_once './matrizAleatoria.php';
 require_once './logic.php';
-
+$gameOver = false;
+$cantidadPelotas = 0;
 // setCokiee game if not exists
 if (!isset($_COOKIE['matriz'])) {
   $matrizGameInit = generarMatrizAleatoria(10, 10);
