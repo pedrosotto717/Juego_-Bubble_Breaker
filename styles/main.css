@@ -1,0 +1,15 @@
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+body {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  background-color: #fafafa;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  color: #333;
+}

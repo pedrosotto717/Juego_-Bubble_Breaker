@@ -1,0 +1,89 @@
+
+
+.board-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.board {
+  border-radius: 10px;
+  width: 640px;
+  height: 640px;
+  min-height: 600px;
+  min-width: 600px;
+  display: flex;
+  align-items: space-between;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 1.5rem;
+  box-shadow: 0px 5px 28px -6px #242424,
+    inset 0px 0 20px 0 #111;
+  /* border : 1px solid #fff; */
+  background: #222;
+  position: relative;
+}
+
+/* .board::before{
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem;
+  background: #222;
+  border-radius: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+} */
+
+.cell {
+  width: 60px;
+  height: 60px;
+  flex: 0 0 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 
+  0 1px 2px rgba(0, 0, 0, 0.24);
+  position: relative;
+}
+
+.cell::before{
+  content: "";
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 20%;
+  height: 20%;
+  background-color: #fff;
+  border-radius: 50%;
+  filter: blur(5px);
+}
+
+.cell[data-color="10"] {
+  background-color: #dbc500 ;
+}
+
+.cell[data-color="20"] {
+  background-color: #55ab94;
+}
+
+.cell[data-color="30"] {
+  background-color: #e72242;
+}
+
+.cell[data-color="40"] {
+  background-color: #3a91d8;
+}
+
+.cell[data-color="50"] {
+  background-color: #c757e1;
+}
+
+.cell[data-color="60"] {
+  background-color: #fa5536;
+}
