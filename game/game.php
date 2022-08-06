@@ -12,17 +12,21 @@ require_once './logic.php';
 
 // setCokiee game if not exists
 if (!isset($_COOKIE['matriz'])) {
-  $matrizGame = generarMatrizAleatoria(10, 10);
-  saveInCokiees($matrizGame);
+  $matrizGameInit = generarMatrizAleatoria(10, 10);
+  saveInCokiees($matrizGameInit);
 } else {
-  $matrizGame = getFromCokiees();
+  $matrizGameInit = getFromCokiees();
 }
 
 
-
 if (isset($_GET['x']) && isset($_GET['y'])) {
+  $matrizGame = getFromCokiees();
   $x = (int) $_GET['x'];
   $y = (int) $_GET['y'];
+  $positions = [];
+  $visited = [];
+
+
   if (isBubble($matrizGame, $x, $y)) {
     $pos = 0;
     $positions[] = [
@@ -35,25 +39,21 @@ if (isset($_GET['x']) && isset($_GET['y'])) {
       'y' => $y // 0
     ];
 
-
-    while ($pos < count($positions)) {
+    while ($pos < count($positions) && $pos < 50) {
       $position = $positions[$pos];
 
       if (isBubble($matrizGame, $position['x'], $position['y'])) {
         $positions = array_merge($positions, getBubble($matrizGame, $visited, $position['x'], $position['y']));
       }
+
       $pos++;
     }
 
-    echo "<pre>";
-    var_dump($positions);
-    echo "</pre>";
-    exit;
+    for ($i = 0; $i < count($positions); $i++) {
+      $matrizGame[$positions[$i]['x']][$positions[$i]['y']] = 0;
+    }
 
-    // $positions = array_merge($positions, getBubble($matrizGame, $x, $y));
-
-    // $positions = getBubble($matrizGame, $x, $y);
-    // saveInCokiees($matrizGame);
+    saveInCokiees($matrizGame);
   }
 }
 
@@ -82,12 +82,12 @@ if (isset($_GET['x']) && isset($_GET['y'])) {
     <div class="board-container">
       <section class="board">
         <?php
-        $matriz = getFromCokiees();
+        $matriz = $matrizGame ?? getFromCokiees();
         ?>
         <?php for ($i = 0; $i < count($matriz); $i++) : ?>
           <?php for ($j = 0; $j < count($matriz[$i]); $j++) : ?>
             <div class="cell" data-color="<?php echo $matriz[$i][$j]; ?>" data-pos-x="<?= $i ?>" data-pos-y="<?= $j ?>">
-              <?php echo $matriz[$i][$j]; ?>
+              <?php echo "$i,$j" ?>
             </div>
           <?php endfor; ?>
         <?php endfor; ?>

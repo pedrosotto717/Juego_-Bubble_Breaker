@@ -2,6 +2,7 @@
 
 function isArrayContains($array, $x, $y)
 {
+
   try {
     for ($i = 0; $i < count($array); $i++) {
       if (isset($array[$i]['x']) && isset($array[$i]['y'])) {
@@ -54,13 +55,22 @@ function isBubble($matriz, $x, $y)
   }
 }
 
-function getBubble($matriz, $visited, $x, $y)
+function isEquals($matriz, $x, $y, $dx, $dy)
+{
+  if (isset($matriz[$dx][$dy]))
+    if ($matriz[$x][$y] == $matriz[$dx][$dy])
+      return true;
+
+  return false;
+}
+
+function getBubble(&$matriz, &$visited, $x, $y)
 {
   try {
     $positions = [];
 
     if (
-      ($matriz[$x][$y] == $matriz[$x][$y + 1])
+      isEquals($matriz, $x, $y, $x, $y + 1)
       && !isArrayContains($visited, $x, $y + 1)
     ) {
       // echo "derecha";
@@ -75,7 +85,7 @@ function getBubble($matriz, $visited, $x, $y)
     }
 
     if (
-      ($matriz[$x][$y] == $matriz[$x][$y - 1])
+      isEquals($matriz, $x, $y, $x, $y - 1)
       && !isArrayContains($visited, $x, $y - 1)
     ) {
       // echo "izquierda";
@@ -90,7 +100,7 @@ function getBubble($matriz, $visited, $x, $y)
     }
 
     if (
-      ($matriz[$x][$y] == $matriz[$x + 1][$y])
+      isEquals($matriz, $x, $y, $x + 1, $y)
       && !isArrayContains($visited, $x + 1, $y)
     ) {
       // echo "abajo";
@@ -105,7 +115,7 @@ function getBubble($matriz, $visited, $x, $y)
     }
 
     if (
-      ($matriz[$x][$y] == $matriz[$x - 1][$y])
+      isEquals($matriz, $x, $y, $x - 1, $y)
       && !isArrayContains($visited, $x - 1, $y)
     ) {
       // echo "arriba";
